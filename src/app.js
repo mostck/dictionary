@@ -1,9 +1,19 @@
 import angular from 'angular';
-import 'devextreme/dist/js/dx.all';
+
+import 'angular-ui-grid';
+// import 'angular-ui-grid/ui-grid.css';
+
+import 'modules/components';
+import 'modules/directives';
+import 'modules/services';
 
 import './app.scss';
 
-angular.module('dictionary', ['dx'])
-.config(($locationProvider) => {
+angular.module('dictionary', [
+  'ui.grid',
+  'components',
+  'directives',
+  'services'])
+.config(/*@ngInject*/ ($locationProvider) => {
   $locationProvider.html5Mode(true);
 });

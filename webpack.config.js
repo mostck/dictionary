@@ -11,7 +11,12 @@ const wpConfig = {
     path: path.join(__dirname, 'dist'),
     filename: 'js/[name].bundle.js'
   },
-
+  resolve: {
+    modules: [
+      path.resolve(__dirname, './src'),
+      'node_modules'
+    ]
+  },
   module: {
     loaders: [
       {
@@ -25,7 +30,6 @@ const wpConfig = {
       {
         test: /\.html$/,
         loader: 'ngtemplate?relativeTo=' + (path.resolve(__dirname, './src')) + '!html?attrs=false?root=' + (path.resolve(__dirname, './src')),
-
       },
       {
         test: /\.scss$/,
@@ -42,13 +46,8 @@ const wpConfig = {
     ]),
     new ExtractTextPlugin({
       filename: 'css/styles.css'
-    }),
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery'
     })
   ],
-  devtool: 'source-map',
   devServer: {
     host: '0.0.0.0',
     port: '9090',
