@@ -7,15 +7,23 @@ class MainCtrl {
   constructor($scope) {
 
     this.$scope = $scope;
+    this.$scope.opts = {};
 
-    console.log('XLSX', XLSX);
-
-    $scope.sheets = [];
-    $scope.activeSheet = {name: null, data: null};
-
-    $scope.readXls = this.readXls.bind(this);
-
-    $scope.myData = [
+    this.$scope.opts.columnDefs = [
+      {
+        field: "firstName"
+      },
+      {
+        field: "lastName"
+      },
+      {
+        field: "company"
+      },
+      {
+        field: "employed"
+      },
+    ];
+    this.$scope.opts.data  = [
       {
         "firstName": "Cox",
         "lastName": "Carney",
@@ -36,6 +44,12 @@ class MainCtrl {
       }
     ];
 
+
+    $scope.sheets = [];
+    $scope.activeSheet = {name: null, data: null, header: null};
+
+    $scope.readXls = this.readXls.bind(this);
+
     $scope.error = function (e) {
       console.log(e);
     }
@@ -43,11 +57,40 @@ class MainCtrl {
 
   readXls(workbook) {
     console.log('readXls');
+
+    function format_column_name(name) { return name.replace(/\s(.)/g, function($$,$1) { return $1.toUpperCase()}); }
+
+    let jsonData = [];
+    let headers = [];
+
+    workbook.SheetNames.forEach(function (sheetName) {
+      let ws = workbook.Sheets[sheetName];
+      let range = XLSX.utils.decode_range(ws['!ref']);
+      let R = 0;
+      for(var C = range.s.c; C <= range.e.c; ++C) {
+        let addr = XLSX.utils.encode_cell({r:R, c:C});
+        let cell = workbook[addr];
+        (cell && cell.v) ? headers.push(format_column_name(cell.v)) : headers.push("Column_" + C);
+      }
+
+      jsonData = XLSX.utils.sheet_to_json(ws, {
+        range:0,
+        header: headers
+      });
+
+    });
+
+    let columnDefs = [];
+    headers.forEach(function (h) {
+      columnDefs.push({ field: h });
+    });
+    this.$scope.opts.columnDefs = columnDefs;
+    this.$scope.opts.data = jsonData;
+
+
     this.$scope.sheets = [];
     for (let sheetName in workbook.Sheets) {
       console.log('Sheet ' + sheetName);
-      let jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-      console.log(jsonData);
 
       this.$scope.sheets.push({ name: sheetName, data: jsonData});
     }
