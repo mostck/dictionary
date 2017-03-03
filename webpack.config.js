@@ -17,6 +17,14 @@ const wpConfig = {
       'node_modules'
     ]
   },
+  node: {
+    fs: 'empty'
+  },
+  externals: [
+    {
+      './cptable': 'var cptable'
+    }
+  ],
   module: {
     loaders: [
       {

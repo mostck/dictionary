@@ -1,8 +1,12 @@
 import './main.scss';
 
+import XLSX from 'xlsx';
+
 class MainCtrl {
   /*@ngInject*/
   constructor($scope) {
+
+    console.log('XLSX', XLSX)
 
     $scope.myData = [
       {
@@ -24,6 +28,17 @@ class MainCtrl {
         "employed": false
       }
     ];
+
+    $scope.read = function (workbook) {
+      for (var sheetName in workbook.Sheets) {
+        var jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+        console.log(jsonData);
+      }
+    };
+
+    $scope.error = function (e) {
+      console.log(e);
+    }
   }
 }
 
