@@ -10,7 +10,21 @@ class MainCtrl {
     this.$scope.opts = {};
 
     $scope.sheets = [];
-    $scope.activeSheet = {name: null, data: null, header: null};
+    $scope.activeSheet = {
+      name: null,
+      data: null,
+      header: null,
+      onRegisterApi: gridApi => {
+        console.log('onRegisterApi', gridApi);
+        let cellTemplate =  "<div class=\"ui-grid-row-header-cell ui-grid-disable-selection\"><div class=\"ui-grid-cell-contents\">{{row.entity['rowHeader']}}</div></div>";
+        gridApi.core.addRowHeaderColumn({
+          name: 'rowHeaderCol',
+          displayName: '',
+          width: 30,
+          cellTemplate: cellTemplate
+        });
+      }
+    };
 
     $scope.readXls = this.readXls.bind(this);
 
@@ -45,19 +59,31 @@ class MainCtrl {
         header: headers
       });
 
-      let columnDefs = [];
-      headers.forEach( h => {
-        columnDefs.push({ field: h });
+      jsonData.forEach((row, i) => {
+        row.rowHeader = i + 1;
       });
 
-      this.$scope.sheets.push({ name: sheetName, columnDefs, data: jsonData});
+      console.log('jsonData', jsonData);
+
+      let columnDefs = [];
+
+      headers.forEach( (h, i) => {
+        columnDefs.push({ field: h, name: String.fromCharCode('A'.charCodeAt() + i) });
+      });
+
+      console.log('columnDefs', columnDefs);
+
+      this.$scope.sheets.push({
+        name: sheetName,
+        columnDefs,
+        data: jsonData
+      });
 
     });
 
 
     if(this.$scope.sheets.length) {
-      this.$scope.activeSheet.name = this.$scope.sheets[0].name;
-      this.$scope.activeSheet.data =  this.$scope.sheets[0].data;
+      this.$scope.activeSheet = this.$scope.sheets[0];
     }
     this.$scope.$apply();
   }
