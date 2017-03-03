@@ -3,7 +3,8 @@
         <li class="sheet-tab-item" ng-class="{'active': sheet.name === activeSheet.name }" ng-repeat="sheet in sheets" ng-click="$ctrl.changeTab(sheet)">{{sheet.name}}</li>
     </ul>
     <div ng-if="activeSheet">
-        <div ui-grid="opts" ui-grid-edit ui-grid-resize-columns class="myGrid"></div>
+        <grid-component grid-data="activeSheet"></grid-component>
+        <!--<div ui-grid="activeSheet" ui-grid-edit ui-grid-resize-columns class="myGrid"></div>-->
     </div>
     <file-input-js-xlsx onread="readXls" onerror="error"></file-input-js-xlsx>
 </div>

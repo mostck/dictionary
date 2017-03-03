@@ -13,6 +13,7 @@ angular.module('dictionary', [
   'ui.grid',
   'ui.grid.edit',
   'ui.grid.resizeColumns',
+  'ui.grid.autoResize',
   'components',
   'directives',
   'services'])

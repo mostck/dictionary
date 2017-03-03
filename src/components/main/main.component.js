@@ -9,42 +9,6 @@ class MainCtrl {
     this.$scope = $scope;
     this.$scope.opts = {};
 
-    this.$scope.opts.columnDefs = [
-      {
-        field: "firstName"
-      },
-      {
-        field: "lastName"
-      },
-      {
-        field: "company"
-      },
-      {
-        field: "employed"
-      },
-    ];
-    this.$scope.opts.data  = [
-      {
-        "firstName": "Cox",
-        "lastName": "Carney",
-        "company": "Enormo",
-        "employed": true
-      },
-      {
-        "firstName": "Lorraine",
-        "lastName": "Wise",
-        "company": "Comveyer",
-        "employed": false
-      },
-      {
-        "firstName": "Nancy",
-        "lastName": "Waters",
-        "company": "Fuelton",
-        "employed": false
-      }
-    ];
-
-
     $scope.sheets = [];
     $scope.activeSheet = {name: null, data: null, header: null};
 
@@ -60,14 +24,17 @@ class MainCtrl {
 
     function format_column_name(name) { return name.replace(/\s(.)/g, function($$,$1) { return $1.toUpperCase()}); }
 
-    let jsonData = [];
-    let headers = [];
+    this.$scope.sheets = [];
 
-    workbook.SheetNames.forEach(function (sheetName) {
+    workbook.SheetNames.forEach(sheetName => {
+
+      let jsonData = [];
+      let headers = [];
+
       let ws = workbook.Sheets[sheetName];
       let range = XLSX.utils.decode_range(ws['!ref']);
       let R = 0;
-      for(var C = range.s.c; C <= range.e.c; ++C) {
+      for(let C = range.s.c; C <= range.e.c; ++C) {
         let addr = XLSX.utils.encode_cell({r:R, c:C});
         let cell = workbook[addr];
         (cell && cell.v) ? headers.push(format_column_name(cell.v)) : headers.push("Column_" + C);
@@ -78,22 +45,15 @@ class MainCtrl {
         header: headers
       });
 
+      let columnDefs = [];
+      headers.forEach( h => {
+        columnDefs.push({ field: h });
+      });
+
+      this.$scope.sheets.push({ name: sheetName, columnDefs, data: jsonData});
+
     });
 
-    let columnDefs = [];
-    headers.forEach(function (h) {
-      columnDefs.push({ field: h });
-    });
-    this.$scope.opts.columnDefs = columnDefs;
-    this.$scope.opts.data = jsonData;
-
-
-    this.$scope.sheets = [];
-    for (let sheetName in workbook.Sheets) {
-      console.log('Sheet ' + sheetName);
-
-      this.$scope.sheets.push({ name: sheetName, data: jsonData});
-    }
 
     if(this.$scope.sheets.length) {
       this.$scope.activeSheet.name = this.$scope.sheets[0].name;
@@ -104,7 +64,7 @@ class MainCtrl {
 
   changeTab(sheet) {
     console.log('changeTab', sheet);
-    this.$scope.activeSheet.name = sheet.name;
+    this.$scope.activeSheet = sheet;
   }
 }
 
