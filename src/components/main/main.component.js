@@ -31,5 +31,5 @@ export const Main = {
   bindings: {
   },
   controller: MainCtrl,
-  // templateUrl: require('./main.html')
+  templateUrl: require('./main.html')
 };
