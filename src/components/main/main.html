@@ -1,4 +1,9 @@
 <div class="main-component">
-    <div ui-grid="{ data: myData }" class="myGrid"></div>
-    <file-input-js-xlsx onread="read" onerror="error"></file-input-js-xlsx>
+    <ul class="sheet-tabs">
+        <li class="sheet-tab-item" ng-class="{'active': sheet.name === activeSheet.name }" ng-repeat="sheet in sheets" ng-click="$ctrl.changeTab(sheet)">{{sheet.name}}</li>
+    </ul>
+    <div ng-if="activeSheet">
+        <div ui-grid="{ data: myData }" class="myGrid"></div>
+    </div>
+    <file-input-js-xlsx onread="readXls" onerror="error"></file-input-js-xlsx>
 </div>

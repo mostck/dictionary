@@ -6,7 +6,14 @@ class MainCtrl {
   /*@ngInject*/
   constructor($scope) {
 
-    console.log('XLSX', XLSX)
+    this.$scope = $scope;
+
+    console.log('XLSX', XLSX);
+
+    $scope.sheets = [];
+    $scope.activeSheet = {name: null, data: null};
+
+    $scope.readXls = this.readXls.bind(this);
 
     $scope.myData = [
       {
@@ -29,16 +36,32 @@ class MainCtrl {
       }
     ];
 
-    $scope.read = function (workbook) {
-      for (var sheetName in workbook.Sheets) {
-        var jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-        console.log(jsonData);
-      }
-    };
-
     $scope.error = function (e) {
       console.log(e);
     }
+  }
+
+  readXls(workbook) {
+    console.log('readXls');
+    this.$scope.sheets = [];
+    for (let sheetName in workbook.Sheets) {
+      console.log('Sheet ' + sheetName);
+      let jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+      console.log(jsonData);
+
+      this.$scope.sheets.push({ name: sheetName, data: jsonData});
+    }
+
+    if(this.$scope.sheets.length) {
+      this.$scope.activeSheet.name = this.$scope.sheets[0].name;
+      this.$scope.activeSheet.data =  this.$scope.sheets[0].data;
+    }
+    this.$scope.$apply();
+  }
+
+  changeTab(sheet) {
+    console.log('changeTab', sheet);
+    this.$scope.activeSheet.name = sheet.name;
   }
 }
 

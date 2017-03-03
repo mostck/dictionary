@@ -1,2 +1,30 @@
 .main {
 }
+
+.main-component {
+  padding-top: 20px;
+}
+
+ul.sheet-tabs {
+  margin: 0 10px;
+  list-style-type: none;
+  display: inline;
+}
+
+li.sheet-tab-item {
+  display: inline;
+  cursor: pointer;
+  color: #777777;
+  margin: 0;
+  padding: 6px;
+  border: 1px solid white;
+  border-bottom: 2px solid #999999;
+  font-weight: bolder;
+  &.active {
+    color: black;
+    border: 1px solid #BBBBBB;
+    border-radius: 6px 6px 0px 0px;
+    border-bottom: 2px solid white;
+    background-color: #CCCCCC;
+  }
+}
