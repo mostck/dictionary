@@ -24,15 +24,17 @@
     </form>
     <form ng-show="stage === 2" class="form-inline">
         <p>Step 2. Columns to import</p>
-        <table style="width: 100%">
+        <table class="table" style="width: 100%">
             <thead>
                 <tr>
+                    <th style="width: 10px;"><input type="checkbox" ng-model="allFields"></th>
                     <th>Name</th>
                     <th>Type</th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="head in headers">
+                    <td><input type="checkbox" ng-model="head.selected"></td>
                     <td>{{ head.name }}</td>
                     <td>{{ head.type }}</td>
                 </tr>
@@ -41,7 +43,7 @@
     </form>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-default" ng-click="$close({status: 'no'})">Close</button>
+    <button class="btn btn-default" ng-click="closeWizard()">Close</button>
     <button class="btn btn-primary" ng-if="stage < finishStage" ng-click="nextHandler()">Next</button>
     <button class="btn btn-primary" ng-if="stage === finishStage" ng-click="finishHandler()">Finish</button>
 </div>

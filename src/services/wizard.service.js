@@ -66,6 +66,8 @@ function wizardCtrl($scope, $timeout) {
 
     $scope.headers = [];
 
+    $scope.allFields = true;
+
 
     let ws = $scope.parsedData[$scope.selectedSheetIndex].ws;
     let range = XLSX.utils.decode_range(ws['!ref']);
@@ -78,9 +80,9 @@ function wizardCtrl($scope, $timeout) {
       let addrT = XLSX.utils.encode_cell({r:R+1, c:C});
       let cellT = ws[addrT];
       if(cell && cell.v && $scope.rowColumnName) {
-        $scope.headers.push({name: format_column_name(cell.v), type: format_column_type(cellT)})
+        $scope.headers.push({name: format_column_name(cell.v), type: format_column_type(cellT), selected: true })
       } else {
-        $scope.headers.push({name: String.fromCharCode('A'.charCodeAt() + C), type: format_column_type(cellT)});
+        $scope.headers.push({name: String.fromCharCode('A'.charCodeAt() + C), type: format_column_type(cellT), selected: true });
       }
     }
 
@@ -90,7 +92,11 @@ function wizardCtrl($scope, $timeout) {
     //   range: $scope.rowColumnName ? R + 1 : R,
     //   header: headers
     // });
-  }
+  };
+
+  $scope.closeWizard = function() {
+    $scope.$dismiss({reason:'canceled'});
+  };
 
 }
 

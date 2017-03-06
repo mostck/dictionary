@@ -4,7 +4,7 @@ import XLSX from 'xlsx';
 
 class MainCtrl {
   /*@ngInject*/
-  constructor($scope, DictionaryService, WizardService) {
+  constructor($scope, DictionaryService, WizardService, XlsParseService) {
 
     this.$scope = $scope;
     this.$scope.opts = {};
@@ -105,7 +105,7 @@ class MainCtrl {
         data: jsonData
       };
 
-    });
+    }).catch(err => {});
 
   }
 
