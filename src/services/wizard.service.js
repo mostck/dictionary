@@ -3,7 +3,7 @@ import './modals-templates/wizard.tpl.html';
 import XLSX from 'xlsx';
 
 /*@ngInject*/
-function wizardCtrl($scope, $timeout) {
+function wizardCtrl($scope, $timeout, XlsParseService) {
 
   $scope.parsedData = $scope.$resolve.parsedData;
 
@@ -56,48 +56,14 @@ function wizardCtrl($scope, $timeout) {
     u: 'undefined'
   };
 
-  function format_column_type(cell) {
-    return cell ? cell.t : 'u'
-  }
-
-  function format_first_row(cell) {
-    return cell ? cell.v : ''
-  }
-
-  function format_column_name(name) {
-    return name.toString().replace(/\s(.)/g, function($$,$1) { return $1.toUpperCase()});
-  }
-
   $scope.buildHeader = function () {
 
     $scope.headers = [];
 
     $scope.allFields = true;
 
+    $scope.headers = XlsParseService.buildHeaders($scope.parsedData[$scope.selectedSheetIndex], $scope.rowSkip, $scope.rowColumnName);
 
-    let ws = $scope.parsedData[$scope.selectedSheetIndex].ws;
-    let range = XLSX.utils.decode_range(ws['!ref']);
-    let R = $scope.rowSkip || 0;
-
-    for(let C = range.s.c; C <= range.e.c; ++C) {
-      let addr = XLSX.utils.encode_cell({r:R, c:C});
-      let cell = ws[addr];
-
-      let addrT = XLSX.utils.encode_cell({r: $scope.rowColumnName ? R+1 : R, c:C});
-      let cellT = ws[addrT];
-      if(cell && cell.v && $scope.rowColumnName) {
-        $scope.headers.push({name: format_column_name(cell.v), firstRow: format_first_row(cellT), type: format_column_type(cellT), selected: true})
-      } else {
-        $scope.headers.push({name: String.fromCharCode('A'.charCodeAt() + C), firstRow: format_first_row(cell), type: format_column_type(cellT), selected: true});
-      }
-    }
-
-    let jsonData;
-
-    // jsonData = XLSX.utils.sheet_to_json(ws, {
-    //   range: $scope.rowColumnName ? R + 1 : R,
-    //   header: headers
-    // });
   };
 
   $scope.closeWizard = function() {
