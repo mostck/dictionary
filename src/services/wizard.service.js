@@ -2,7 +2,29 @@ import './modals-templates/wizard.tpl.html';
 
 /*@ngInject*/
 function wizardCtrl($scope) {
-  $scope.test = 'It\'s working';
+
+  $scope.stage = 1;
+
+  $scope.finishStage = 2;
+
+  $scope.sheetsList = $scope.parsedData.map((sheet, i) => {
+    return {name: sheet.name, index: '' + i};
+  });
+
+  if($scope.sheetsList.length) $scope.selectedSheetIndex = '0';
+
+  console.log('$scope.sheetsList', $scope.sheetsList);
+
+  $scope.nextHandler = function() {
+    $scope.stage++;
+  };
+
+  $scope.finishHandler = function() {
+    $scope.$close({
+      selectedSheetIndex: $scope.selectedSheetIndex
+    });
+  };
+
 }
 
 

@@ -101,7 +101,9 @@ class MainCtrl {
     }
     this.$scope.$apply();
 
-    this.WizardService.show(this.$scope.sheets);
+    this.WizardService.show(this.$scope.sheets).then(res => {
+      console.log('res', res);
+    });
   }
 
   changeTab(sheet) {
