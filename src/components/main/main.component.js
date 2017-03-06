@@ -71,7 +71,9 @@ class MainCtrl {
       let jsonData;
       let headers = [];
 
-      let ws = this.$scope.sheets[res.selectedSheetIndex].ws;
+      this.$scope.sheets = this.$scope.sheets.slice(res.selectedSheetIndex, res.selectedSheetIndex + 1);
+
+      let ws = this.$scope.sheets[0].ws;
       let range = XLSX.utils.decode_range(ws['!ref']);
       let R = res.rowSkip || 0;
 
@@ -98,23 +100,13 @@ class MainCtrl {
       });
 
       this.$scope.activeSheet = {
-        name: this.$scope.sheets[res.selectedSheetIndex].name,
+        name: this.$scope.sheets[0].name,
         columnDefs,
         data: jsonData
       };
 
     });
 
-
-    // this.WizardService.show(this.$scope.sheets).then(res => {
-    //   console.log('res', res);
-    //
-    //   this.$scope.sheets = this.$scope.sheets.slice(res.selectedSheetIndex, res.selectedSheetIndex + 1);
-    //
-    //   if(this.$scope.sheets.length) {
-    //     this.$scope.activeSheet = this.$scope.sheets[0];
-    //   }
-    // });
   }
 
   changeTab(sheet) {
