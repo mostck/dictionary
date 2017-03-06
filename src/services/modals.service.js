@@ -1,5 +1,3 @@
-import 'shared/modals/alert.tpl.html';
-import 'shared/modals/confirm.tpl.html';
 
 export class ModalsService {
   /*@ngInject*/
@@ -9,7 +7,7 @@ export class ModalsService {
 
   alert(options) {
     return this.$uibModal.open({
-      templateUrl: require('shared/modals/alert.tpl.html'),
+      templateUrl: require('./modals-templates/alert.tpl.html'),
       size:  options.size ? options.size : 'md',
       controller: ['$scope', function ($scope) {
         Object.keys(options).forEach(key => {
@@ -21,7 +19,7 @@ export class ModalsService {
 
   confirm(options) {
     return this.$uibModal.open({
-      templateUrl: require('shared/modals/confirm.tpl.html'),
+      templateUrl: require('./modals-templates/confirm.tpl.html'),
       size:  options.size ? options.size : 'md',
       controller: ['$scope', function ($scope) {
         Object.keys(options).forEach(key => {
@@ -33,8 +31,9 @@ export class ModalsService {
 
   show(options) {
     return this.$uibModal.open({
-      sieze: options.size || 'md',
+      size: options.size || 'md',
       component: options.component
     }).result;
   }
+
 }

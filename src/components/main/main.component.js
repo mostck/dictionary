@@ -4,10 +4,12 @@ import XLSX from 'xlsx';
 
 class MainCtrl {
   /*@ngInject*/
-  constructor($scope, DictionaryService) {
+  constructor($scope, DictionaryService, WizardService) {
 
     this.$scope = $scope;
     this.$scope.opts = {};
+    this.WizardService = WizardService;
+    this.DictionaryService = DictionaryService;
 
     $scope.dictionariesList = [];
     $scope.selectedDictionaryId = null;
@@ -18,7 +20,7 @@ class MainCtrl {
       data: null,
       header: null,
       onRegisterApi: gridApi => {
-        console.log('onRegisterApi', gridApi);
+        // console.log('onRegisterApi', gridApi);
         let cellTemplate =  "<div class=\"ui-grid-row-header-cell ui-grid-disable-selection\"><div class=\"ui-grid-cell-contents\">{{row.entity['rowHeader']}}</div></div>";
         gridApi.core.addRowHeaderColumn({
           name: 'rowHeaderCol',
@@ -47,7 +49,6 @@ class MainCtrl {
   }
 
   readXls(workbook) {
-    console.log('readXls');
 
     function format_column_name(name) { return name.replace(/\s(.)/g, function($$,$1) { return $1.toUpperCase()}); }
 
@@ -76,7 +77,7 @@ class MainCtrl {
         row.rowHeader = i + 1;
       });
 
-      console.log('jsonData', jsonData);
+      // console.log('jsonData', jsonData);
 
       let columnDefs = [];
 
@@ -84,7 +85,7 @@ class MainCtrl {
         columnDefs.push({ field: h, name: String.fromCharCode('A'.charCodeAt() + i) });
       });
 
-      console.log('columnDefs', columnDefs);
+      // console.log('columnDefs', columnDefs);
 
       this.$scope.sheets.push({
         name: sheetName,
@@ -99,6 +100,8 @@ class MainCtrl {
       this.$scope.activeSheet = this.$scope.sheets[0];
     }
     this.$scope.$apply();
+
+    this.WizardService.show(this.$scope.sheets);
   }
 
   changeTab(sheet) {

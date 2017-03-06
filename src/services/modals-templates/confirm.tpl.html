@@ -1,0 +1,8 @@
+<div ng-if="title" class="modal-header"><h4 class="{{titleStyle ? 'text-' + titleStyle: ''}}">{{title}}</h4></div>
+<div class="modal-body">
+    {{message}}
+</div>
+<div class="modal-footer">
+    <button class="btn btn-{{ yesStyle ? yesStyle : 'primary' }}" ng-click="$close({status: 'yes'})">{{ yesText ? yesText : 'Yes' }}</button>
+    <button class="btn btn-{{ noStyle ? noStyle : 'default' }}" ng-click="$close({status: 'no'})">{{ noText ? noText : 'Cancel' }}</button>
+</div>
