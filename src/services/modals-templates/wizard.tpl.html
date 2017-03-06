@@ -9,6 +9,35 @@
                     ng-change="sheetChanged()">
             </select>
         </div>
+        <p></p>
+        <div class="form-group">
+            <div>
+                <span>Header row to skip</span>
+                <input type="number" ng-model="rowSkip" ng-change="rowSkipChange()">
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <input type="checkbox" ng-model="rowColumnName"><span>Column name is fist data row</span>
+            </div>
+        </div>
+    </form>
+    <form ng-show="stage === 2" class="form-inline">
+        <p>Step 2. Columns to import</p>
+        <table style="width: 100%">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="head in headers">
+                    <td>{{ head.name }}</td>
+                    <td>{{ head.type }}</td>
+                </tr>
+            </tbody>
+        </table>
     </form>
 </div>
 <div class="modal-footer">

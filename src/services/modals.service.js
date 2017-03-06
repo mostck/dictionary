@@ -1,3 +1,5 @@
+import './modals-templates/alert.tpl.html';
+import './modals-templates/confirm.tpl.html';
 
 export class ModalsService {
   /*@ngInject*/
@@ -31,9 +33,8 @@ export class ModalsService {
 
   show(options) {
     return this.$uibModal.open({
-      size: options.size || 'md',
+      sieze: options.size || 'md',
       component: options.component
     }).result;
   }
-
 }

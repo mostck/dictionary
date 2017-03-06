@@ -1,5 +1,7 @@
 import './modals-templates/wizard.tpl.html';
 
+import XLSX from 'xlsx';
+
 /*@ngInject*/
 function wizardCtrl($scope, $timeout) {
 
@@ -9,6 +11,9 @@ function wizardCtrl($scope, $timeout) {
 
   $scope.finishStage = 2;
 
+  $scope.rowColumnName = null;
+  $scope.rowSkip = 0;
+  $scope.headers = [];
 
   $scope.sheetsList = $scope.parsedData.map((sheet, i) => {
     console.log('i', i);
@@ -17,13 +22,22 @@ function wizardCtrl($scope, $timeout) {
 
   if($scope.sheetsList.length) $scope.selectedSheetIndex = '0';
 
+  console.log('$scope.sheetsList', $scope.sheetsList);
+
+  $scope.rowSkipChange = function() {
+    console.log('rowSkipChange', $scope.rowSkip)
+  };
+
   $scope.nextHandler = function() {
     $scope.stage++;
+    $scope.showHeaders()
   };
 
   $scope.finishHandler = function() {
     $scope.$close({
-      selectedSheetIndex: parseInt($scope.selectedSheetIndex)
+      selectedSheetIndex: parseInt($scope.selectedSheetIndex),
+      rowColumnName: $scope.rowColumnName,
+      rowSkip: parseInt($scope.rowSkip)
     });
   };
 
@@ -33,8 +47,52 @@ function wizardCtrl($scope, $timeout) {
 
   };
 
-}
 
+  function format_column_name(name) { return name.replace(/\s(.)/g, function($$,$1) { return $1.toUpperCase()}); }
+
+  $scope.types = {
+    b: 'Boolean',
+    n: 'Number',
+    e: 'error',
+    s: 'String',
+    d: 'Date'
+  };
+
+  function format_column_type(cell) {
+    return cell ? $scope.types[cell.t] : 'undefined'
+  }
+
+  $scope.showHeaders = function () {
+
+    $scope.headers = [];
+
+
+    let ws = $scope.parsedData[$scope.selectedSheetIndex].ws;
+    let range = XLSX.utils.decode_range(ws['!ref']);
+    let R = $scope.rowSkip || 0;
+
+    for(let C = range.s.c; C <= range.e.c; ++C) {
+      let addr = XLSX.utils.encode_cell({r:R, c:C});
+      let cell = ws[addr];
+
+      let addrT = XLSX.utils.encode_cell({r:R+1, c:C});
+      let cellT = ws[addrT];
+      if(cell && cell.v && $scope.rowColumnName) {
+        $scope.headers.push({name: format_column_name(cell.v), type: format_column_type(cellT)})
+      } else {
+        $scope.headers.push({name: String.fromCharCode('A'.charCodeAt() + C), type: format_column_type(cellT)});
+      }
+    }
+
+    let jsonData;
+
+    // jsonData = XLSX.utils.sheet_to_json(ws, {
+    //   range: $scope.rowColumnName ? R + 1 : R,
+    //   header: headers
+    // });
+  }
+
+}
 
 export class WizardService {
   /*@ngInject*/
@@ -56,5 +114,4 @@ export class WizardService {
       controller: wizardCtrl,
     }).result;
   }
-
 }

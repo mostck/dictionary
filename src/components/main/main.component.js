@@ -50,62 +50,71 @@ class MainCtrl {
 
   readXls(workbook) {
 
-    function format_column_name(name) { return name.replace(/\s(.)/g, function($$,$1) { return $1.toUpperCase()}); }
+    function format_column_name(name) { return name.replace(/\s(.)/g, function($$,$1) { return $1.toUpperCase()}); } // CamelCase
+    // function format_column_name(name) { return name.replace(/\s/g, "_"); }
 
     this.$scope.sheets = [];
 
     workbook.SheetNames.forEach(sheetName => {
+      let ws = workbook.Sheets[sheetName];
 
-      let jsonData = [];
+      this.$scope.sheets.push({
+        name: sheetName,
+        ws: ws
+      });
+
+    });
+
+    this.WizardService.show(this.$scope.sheets).then(res => {
+      console.log('res', res);
+
+      let jsonData;
       let headers = [];
 
-      let ws = workbook.Sheets[sheetName];
+      let ws = this.$scope.sheets[res.selectedSheetIndex].ws;
       let range = XLSX.utils.decode_range(ws['!ref']);
-      let R = 0;
+      let R = res.rowSkip || 0;
+
       for(let C = range.s.c; C <= range.e.c; ++C) {
         let addr = XLSX.utils.encode_cell({r:R, c:C});
-        let cell = workbook[addr];
-        (cell && cell.v) ? headers.push(format_column_name(cell.v)) : headers.push("Column_" + C);
+        let cell = ws[addr];
+        (cell && cell.v && res.rowColumnName) ? headers.push(format_column_name(cell.v)) : headers.push(String.fromCharCode('A'.charCodeAt() + C));
       }
 
       jsonData = XLSX.utils.sheet_to_json(ws, {
-        range:0,
+        range: res.rowColumnName ? R + 1 : R,
         header: headers
       });
+
 
       jsonData.forEach((row, i) => {
         row.rowHeader = i + 1;
       });
 
-      // console.log('jsonData', jsonData);
-
       let columnDefs = [];
 
       headers.forEach( (h, i) => {
-        columnDefs.push({ field: h, name: String.fromCharCode('A'.charCodeAt() + i) });
+        columnDefs.push({ field: h, name: h });
       });
 
-      // console.log('columnDefs', columnDefs);
-
-      this.$scope.sheets.push({
-        name: sheetName,
+      this.$scope.activeSheet = {
+        name: this.$scope.sheets[res.selectedSheetIndex].name,
         columnDefs,
         data: jsonData
-      });
+      };
 
     });
 
 
-    this.WizardService.show(this.$scope.sheets).then(res => {
-      console.log('res', res);
-
-      this.$scope.sheets = this.$scope.sheets.slice(res.selectedSheetIndex, res.selectedSheetIndex + 1);
-
-      if(this.$scope.sheets.length) {
-        this.$scope.activeSheet = this.$scope.sheets[0];
-      }
-
-    });
+    // this.WizardService.show(this.$scope.sheets).then(res => {
+    //   console.log('res', res);
+    //
+    //   this.$scope.sheets = this.$scope.sheets.slice(res.selectedSheetIndex, res.selectedSheetIndex + 1);
+    //
+    //   if(this.$scope.sheets.length) {
+    //     this.$scope.activeSheet = this.$scope.sheets[0];
+    //   }
+    // });
   }
 
   changeTab(sheet) {
