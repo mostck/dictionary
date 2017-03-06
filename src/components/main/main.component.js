@@ -71,23 +71,19 @@ class MainCtrl {
       let jsonData;
       let headers = [];
 
+      res.headers.forEach(function (el) {
+        headers.push(el.name);
+      });
+
       this.$scope.sheets = this.$scope.sheets.slice(res.selectedSheetIndex, res.selectedSheetIndex + 1);
 
       let ws = this.$scope.sheets[0].ws;
-      let range = XLSX.utils.decode_range(ws['!ref']);
       let R = res.rowSkip || 0;
-
-      for(let C = range.s.c; C <= range.e.c; ++C) {
-        let addr = XLSX.utils.encode_cell({r:R, c:C});
-        let cell = ws[addr];
-        (cell && cell.v && res.rowColumnName) ? headers.push(format_column_name(cell.v)) : headers.push(String.fromCharCode('A'.charCodeAt() + C));
-      }
 
       jsonData = XLSX.utils.sheet_to_json(ws, {
         range: res.rowColumnName ? R + 1 : R,
         header: headers
       });
-
 
       jsonData.forEach((row, i) => {
         row.rowHeader = i + 1;

@@ -37,7 +37,8 @@ function wizardCtrl($scope, $timeout, XlsParseService) {
     $scope.$close({
       selectedSheetIndex: parseInt($scope.selectedSheetIndex),
       rowColumnName: $scope.rowColumnName,
-      rowSkip: parseInt($scope.rowSkip)
+      rowSkip: parseInt($scope.rowSkip),
+      headers: $scope.headers
     });
   };
 
