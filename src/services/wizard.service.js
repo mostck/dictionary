@@ -1,19 +1,21 @@
 import './modals-templates/wizard.tpl.html';
 
 /*@ngInject*/
-function wizardCtrl($scope) {
+function wizardCtrl($scope, $timeout) {
+
+  $scope.parsedData = $scope.$resolve.parsedData;
 
   $scope.stage = 1;
 
   $scope.finishStage = 2;
 
+
   $scope.sheetsList = $scope.parsedData.map((sheet, i) => {
-    return {name: sheet.name, index: '' + i};
+    console.log('i', i);
+    return {name: sheet.name, ind: (i + '')};
   });
 
   if($scope.sheetsList.length) $scope.selectedSheetIndex = '0';
-
-  console.log('$scope.sheetsList', $scope.sheetsList);
 
   $scope.nextHandler = function() {
     $scope.stage++;
@@ -21,8 +23,14 @@ function wizardCtrl($scope) {
 
   $scope.finishHandler = function() {
     $scope.$close({
-      selectedSheetIndex: $scope.selectedSheetIndex
+      selectedSheetIndex: parseInt($scope.selectedSheetIndex)
     });
+  };
+
+  $scope.sheetChanged = function() {
+
+    console.log('Sheet changed', $scope.selectedSheetIndex);
+
   };
 
 }
@@ -37,15 +45,15 @@ export class WizardService {
 
 
   show(parsedData) {
-    let wizardScope  = this.$rootScope.$new();
-
-    wizardScope.parsedData = parsedData;
 
     return this.$uibModal.open({
       templateUrl: require('./modals-templates/wizard.tpl.html'),
       size: 'lg',
-      scope: wizardScope,
-      controller: wizardCtrl
+      backdrop: 'static',
+      resolve: {
+        parsedData: () => parsedData
+      },
+      controller: wizardCtrl,
     }).result;
   }
 

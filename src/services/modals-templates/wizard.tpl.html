@@ -1,11 +1,14 @@
 <div class="modal-header"><h4>Import Wizard</h4></div>
 <div class="modal-body">
-    <form ng-if="stage === 1" class="form-inline">
-        <label>Select spreadsheet to import
-            <select class="form-control" ng-model="selectedSheetIndex">
-                <option ng-repeat="sheet in sheetsList" value="{{sheet.index}}">{{sheet.name}}</option>
+    <form ng-show="stage === 1" class="form-inline">
+        <p>Step 1. Select spreadsheet to import</p>
+        <div class="form-group">
+            <select class="form-control"
+                    ng-model="selectedSheetIndex"
+                    ng-options="sheet.ind as sheet.name for sheet in sheetsList"
+                    ng-change="sheetChanged()">
             </select>
-        </label>
+        </div>
     </form>
 </div>
 <div class="modal-footer">

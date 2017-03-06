@@ -96,13 +96,15 @@ class MainCtrl {
     });
 
 
-    if(this.$scope.sheets.length) {
-      this.$scope.activeSheet = this.$scope.sheets[0];
-    }
-    this.$scope.$apply();
-
     this.WizardService.show(this.$scope.sheets).then(res => {
       console.log('res', res);
+
+      this.$scope.sheets = this.$scope.sheets.slice(res.selectedSheetIndex, res.selectedSheetIndex + 1);
+
+      if(this.$scope.sheets.length) {
+        this.$scope.activeSheet = this.$scope.sheets[0];
+      }
+
     });
   }
 
