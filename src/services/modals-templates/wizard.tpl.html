@@ -10,33 +10,42 @@
             </select>
         </div>
         <p></p>
-        <div class="form-group">
-            <div>
-                <span>Header row to skip</span>
-                <input type="number" ng-model="rowSkip" ng-change="rowSkipChange()">
-            </div>
-        </div>
-        <div class="form-group">
-            <div>
-                <input type="checkbox" ng-model="rowColumnName"><span>Column name is fist data row</span>
-            </div>
-        </div>
     </form>
     <form ng-show="stage === 2" class="form-inline">
         <p>Step 2. Columns to import</p>
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <div>
+                    <span>Header row to skip</span>
+                    <input class="form-control" min="0" type="number" ng-model="rowSkip" ng-change="buildHeader()">
+                </div>
+            </div>
+            <div class="col-sm-6 form-group">
+                <input class="form-control" type="checkbox" ng-model="rowColumnName" ng-change="buildHeader()" style="margin-top: 0">
+                <span>Column name is first data row</span>
+            </div>
+        </div>
+
+        <hr />
         <table class="table" style="width: 100%">
             <thead>
                 <tr>
                     <th style="width: 10px;"><input type="checkbox" ng-model="allFields"></th>
                     <th>Name</th>
+                    <th>First row</th>
                     <th>Type</th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="head in headers">
                     <td><input type="checkbox" ng-model="head.selected"></td>
-                    <td>{{ head.name }}</td>
-                    <td>{{ head.type }}</td>
+                    <td><input class="form-control" type="text" class="form-control" ng-model="head.name"></td>
+                    <td><span>{{head.firstRow}}</span></td>
+                    <td>
+                        <select class="form-control" ng-model="head.type">
+                            <option ng-repeat="(key, type) in types" ng-value="key">{{type}}</option>
+                        </select>
+                    </td>
                 </tr>
             </tbody>
         </table>

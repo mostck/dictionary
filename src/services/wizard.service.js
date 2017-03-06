@@ -30,7 +30,7 @@ function wizardCtrl($scope, $timeout) {
 
   $scope.nextHandler = function() {
     $scope.stage++;
-    $scope.showHeaders()
+    $scope.buildHeader()
   };
 
   $scope.finishHandler = function() {
@@ -47,22 +47,28 @@ function wizardCtrl($scope, $timeout) {
 
   };
 
-
-  function format_column_name(name) { return name.replace(/\s(.)/g, function($$,$1) { return $1.toUpperCase()}); }
-
   $scope.types = {
     b: 'Boolean',
     n: 'Number',
     e: 'error',
     s: 'String',
-    d: 'Date'
+    d: 'Date',
+    u: 'undefined'
   };
 
   function format_column_type(cell) {
-    return cell ? $scope.types[cell.t] : 'undefined'
+    return cell ? cell.t : 'u'
   }
 
-  $scope.showHeaders = function () {
+  function format_first_row(cell) {
+    return cell ? cell.v : ''
+  }
+
+  function format_column_name(name) {
+    return name.toString().replace(/\s(.)/g, function($$,$1) { return $1.toUpperCase()});
+  }
+
+  $scope.buildHeader = function () {
 
     $scope.headers = [];
 
@@ -77,12 +83,12 @@ function wizardCtrl($scope, $timeout) {
       let addr = XLSX.utils.encode_cell({r:R, c:C});
       let cell = ws[addr];
 
-      let addrT = XLSX.utils.encode_cell({r:R+1, c:C});
+      let addrT = XLSX.utils.encode_cell({r: $scope.rowColumnName ? R+1 : R, c:C});
       let cellT = ws[addrT];
       if(cell && cell.v && $scope.rowColumnName) {
-        $scope.headers.push({name: format_column_name(cell.v), type: format_column_type(cellT), selected: true })
+        $scope.headers.push({name: format_column_name(cell.v), firstRow: format_first_row(cellT), type: format_column_type(cellT), selected: true})
       } else {
-        $scope.headers.push({name: String.fromCharCode('A'.charCodeAt() + C), type: format_column_type(cellT), selected: true });
+        $scope.headers.push({name: String.fromCharCode('A'.charCodeAt() + C), firstRow: format_first_row(cell), type: format_column_type(cellT), selected: true});
       }
     }
 
