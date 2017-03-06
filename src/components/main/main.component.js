@@ -50,9 +50,6 @@ class MainCtrl {
 
   readXls(workbook) {
 
-    function format_column_name(name) { return name.replace(/\s(.)/g, function($$,$1) { return $1.toUpperCase()}); } // CamelCase
-    // function format_column_name(name) { return name.replace(/\s/g, "_"); }
-
     this.$scope.sheets = [];
 
     workbook.SheetNames.forEach(sheetName => {
@@ -70,9 +67,11 @@ class MainCtrl {
 
       let jsonData;
       let headers = [];
+      let columnDefs = [];
 
       res.headers.forEach(function (el) {
         headers.push(el.name);
+        columnDefs.push({ field: el.name, name: el.name });
       });
 
       this.$scope.sheets = this.$scope.sheets.slice(res.selectedSheetIndex, res.selectedSheetIndex + 1);
@@ -87,12 +86,6 @@ class MainCtrl {
 
       jsonData.forEach((row, i) => {
         row.rowHeader = i + 1;
-      });
-
-      let columnDefs = [];
-
-      headers.forEach( (h, i) => {
-        columnDefs.push({ field: h, name: h });
       });
 
       this.$scope.activeSheet = {

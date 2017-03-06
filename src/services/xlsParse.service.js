@@ -9,7 +9,10 @@ function format_first_row(cell) {
 }
 
 function format_column_name(name) {
-  return name.toString().replace(/\s(.)/g, function($$,$1) { return $1.toUpperCase()});
+  return name.toString()
+    .toLowerCase()
+    .replace(/\s(.)/g, function($$,$1) { return $1.toUpperCase()})
+    .replace(/[.*+?^${}()|[\]\\]/g, '')
 }
 
 
