@@ -1,3 +1,6 @@
 import angular from 'angular';
 
-angular.module('services', []);
+import { DictionaryService } from 'services/dictionary.service'
+
+angular.module('services', [])
+  .service('DictionaryService', DictionaryService);

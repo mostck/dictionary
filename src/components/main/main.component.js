@@ -4,10 +4,13 @@ import XLSX from 'xlsx';
 
 class MainCtrl {
   /*@ngInject*/
-  constructor($scope) {
+  constructor($scope, DictionaryService) {
 
     this.$scope = $scope;
     this.$scope.opts = {};
+
+    $scope.dictionariesList = [];
+    $scope.selectedDictionaryId = null;
 
     $scope.sheets = [];
     $scope.activeSheet = {
@@ -25,6 +28,16 @@ class MainCtrl {
         });
       }
     };
+
+    DictionaryService.getDictionariesList()
+      .then(res => {
+
+        $scope.dictionariesList = res;
+        if(res.length) $scope.selectedDictionaryId = res[0].id;
+
+      }).catch(err => {
+        console.log('Error getting dictionaries', err);
+      });
 
     $scope.readXls = this.readXls.bind(this);
 
@@ -91,6 +104,10 @@ class MainCtrl {
   changeTab(sheet) {
     console.log('changeTab', sheet);
     this.$scope.activeSheet = sheet;
+  }
+
+  dictionaryChanged() {
+    console.log('selectedDictionaryId', this.$scope.selectedDictionaryId);
   }
 }
 
