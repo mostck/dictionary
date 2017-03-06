@@ -3,6 +3,8 @@ import angular from 'angular';
 import 'angular-ui-grid';
 import 'angular-ui-grid/ui-grid.css';
 
+import 'angular-ui-bootstrap';
+
 import 'modules/components';
 import 'modules/directives';
 import 'modules/services';
@@ -14,6 +16,7 @@ angular.module('dictionary', [
   'ui.grid.edit',
   'ui.grid.resizeColumns',
   'ui.grid.moveColumns',
+  'ui.bootstrap',
   'components',
   'directives',
   'services'])

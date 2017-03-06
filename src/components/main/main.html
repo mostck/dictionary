@@ -1,12 +1,14 @@
 <div class="main-component">
-    <select ng-model="selectedDictionaryId" ng-change="$ctrl.dictionaryChanged()">
-        <option ng-repeat="dic in dictionariesList" value="{{dic.id}}">{{dic.title}}</option>
-    </select>
+    <form class="form-inline" style="margin-bottom: 20px;">
+        <select class="form-control" ng-model="selectedDictionaryId" ng-change="$ctrl.dictionaryChanged()">
+            <option ng-repeat="dic in dictionariesList" value="{{dic.id}}">{{dic.title}}</option>
+        </select>
+        <file-input-js-xlsx onread="readXls" onerror="error"></file-input-js-xlsx>
+    </form>
     <ul class="sheet-tabs">
         <li class="sheet-tab-item" ng-class="{'active': sheet.name === activeSheet.name }" ng-repeat="sheet in sheets" ng-click="$ctrl.changeTab(sheet)">{{sheet.name}}</li>
     </ul>
     <div ng-if="activeSheet">
         <grid-component grid-data="activeSheet"></grid-component>
     </div>
-    <file-input-js-xlsx onread="readXls" onerror="error"></file-input-js-xlsx>
 </div>

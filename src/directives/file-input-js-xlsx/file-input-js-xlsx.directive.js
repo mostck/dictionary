@@ -5,7 +5,10 @@ export default ngInstance => {
   ngInstance.directive('fileInputJsXlsx', function () {
     return {
       restrict: 'E',
-      template: '<input type="file" />',
+      template: `<label class="btn-bs-file btn btn-primary">
+                    Import
+                    <input id="file-selector" type="file" />
+                </label>`,
       replace: true,
       link: function (scope, element, attrs) {
 
@@ -69,7 +72,9 @@ export default ngInstance => {
           }
         }
 
-        element.on('change', handleSelect);
+        let fileEl = angular.element(element[0].querySelector('#file-selector'));
+
+        fileEl.on('change', handleSelect);
       }
     };
   });
