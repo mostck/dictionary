@@ -53,17 +53,19 @@ class MainCtrl {
 
     this.$scope.sheets = [];
 
+    let tempSheets = [];
+
     workbook.SheetNames.forEach(sheetName => {
       let ws = workbook.Sheets[sheetName];
 
-      this.$scope.sheets.push({
+      tempSheets.push({
         name: sheetName,
         ws: ws
       });
 
     });
 
-    this.WizardService.show(this.$scope.sheets).then(res => {
+    this.WizardService.show(tempSheets).then(res => {
       console.log('res', res);
 
       let jsonData;
@@ -75,9 +77,9 @@ class MainCtrl {
         columnDefs.push({ field: el.name, name: el.name });
       });
 
-      this.$scope.sheets = this.$scope.sheets.slice(res.selectedSheetIndex, res.selectedSheetIndex + 1);
+      let selectedSheet = tempSheets[res.selectedSheetIndex];
 
-      let ws = this.$scope.sheets[0].ws;
+      let ws = selectedSheet.ws;
       let R = res.rowSkip || 0;
 
       jsonData = XLSX.utils.sheet_to_json(ws, {
@@ -89,11 +91,13 @@ class MainCtrl {
         row.rowHeader = i + 1;
       });
 
-      this.$scope.activeSheet = {
-        name: this.$scope.sheets[0].name,
+      let dataSheet = {
+        name: selectedSheet.name,
         columnDefs,
         data: jsonData
       };
+
+      this.$scope.sheets.push(dataSheet);
 
       let structureData = res.headers.map((h, i) => {
         return { __row_num__: i, rowHeader: (i + 1), A: h.name, B: this.XlsParseService.typesMap[h.type] };
@@ -106,6 +110,8 @@ class MainCtrl {
       };
 
       this.$scope.sheets.push(structureSheet);
+
+      this.$scope.activeSheet = this.$scope.sheets[0];
 
     }).catch(err => {});
 
