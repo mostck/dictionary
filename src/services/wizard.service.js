@@ -51,14 +51,7 @@ function wizardCtrl($scope, $timeout, XlsParseService) {
 
   };
 
-  $scope.types = {
-    b: 'Boolean',
-    n: 'Number',
-    e: 'error',
-    s: 'String',
-    d: 'Date',
-    u: 'undefined'
-  };
+  $scope.types = XlsParseService.typesMap;
 
   $scope.buildHeader = function () {
 

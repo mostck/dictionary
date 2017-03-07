@@ -20,6 +20,15 @@ export class XlsParseService {
 
   constructor() {
 
+    this.typesMap = {
+        b: 'Boolean',
+        n: 'Number',
+        e: 'error',
+        s: 'String',
+        d: 'Date',
+        u: 'undefined'
+    };
+
   }
 
   readXls(workbook) {

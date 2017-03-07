@@ -10,6 +10,7 @@ class MainCtrl {
     this.$scope.opts = {};
     this.WizardService = WizardService;
     this.DictionaryService = DictionaryService;
+    this.XlsParseService = XlsParseService;
 
     $scope.dictionariesList = [];
     $scope.selectedDictionaryId = null;
@@ -93,6 +94,18 @@ class MainCtrl {
         columnDefs,
         data: jsonData
       };
+
+      let structureData = res.headers.map((h, i) => {
+        return { __row_num__: i, rowHeader: (i + 1), A: h.name, B: this.XlsParseService.typesMap[h.type] };
+      });
+
+      let structureSheet = {
+        name: 'Data Structure',
+        columnDefs: [ { field: 'A', name: 'Field Name' }, { field: 'B', name: 'Data Type' }],
+        data: structureData,
+      };
+
+      this.$scope.sheets.push(structureSheet);
 
     }).catch(err => {});
 
