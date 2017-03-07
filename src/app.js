@@ -8,6 +8,7 @@ import 'angular-ui-bootstrap';
 import 'modules/components';
 import 'modules/directives';
 import 'modules/services';
+import 'modules/filters';
 
 import './app.scss';
 
@@ -19,6 +20,7 @@ angular.module('dictionary', [
   'ui.bootstrap',
   'components',
   'directives',
+  'filters',
   'services'])
 .config(/*@ngInject*/ ($locationProvider) => {
   $locationProvider.html5Mode(true);

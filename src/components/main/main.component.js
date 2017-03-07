@@ -100,12 +100,20 @@ class MainCtrl {
       this.$scope.sheets.push(dataSheet);
 
       let structureData = res.headers.map((h, i) => {
-        return { __row_num__: i, rowHeader: (i + 1), A: h.name, B: this.XlsParseService.typesMap[h.type] };
+        return { __row_num__: i, rowHeader: (i + 1), A: h.name, B: h.type };
       });
 
       let structureSheet = {
         name: 'Data Structure',
-        columnDefs: [ { field: 'A', name: 'Field Name' }, { field: 'B', name: 'Data Type' }],
+        columnDefs: [ { field: 'A', name: 'Field Name' },
+          { field: 'B', name: 'Data Type',
+            editableCellTemplate: 'ui-grid/dropdownEditor',
+            width: '20%',
+            cellFilter: 'typeFilter', editDropdownValueLabel: 'datatype', editDropdownOptionsArray:
+            Object.keys(this.XlsParseService.typesMap).map(key => {
+              return { id: key, datatype: this.XlsParseService.typesMap[key]};
+            }),
+          }],
         data: structureData,
       };
 
