@@ -30,7 +30,7 @@
         <table class="table" style="width: 100%">
             <thead>
                 <tr>
-                    <th style="width: 10px;"><input type="checkbox" ng-model="allFields"></th>
+                    <th style="width: 10px;"><input type="checkbox" ng-model="allFields" ng-click="toggleAll()"></th>
                     <th>Name</th>
                     <th>First row</th>
                     <th>Type</th>
@@ -38,7 +38,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="head in headers">
-                    <td><input type="checkbox" ng-model="head.selected"></td>
+                    <td><input type="checkbox" ng-model="head.selected" ng-click="checkAll(head)"></td>
                     <td><input class="form-control" type="text" class="form-control" ng-model="head.name"></td>
                     <td><span>{{head.firstRow}}</span></td>
                     <td>

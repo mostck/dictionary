@@ -34,6 +34,9 @@ function wizardCtrl($scope, $timeout, XlsParseService) {
   };
 
   $scope.finishHandler = function() {
+
+    $scope.headers = $scope.headers.filter(h => h.selected);
+
     $scope.$close({
       selectedSheetIndex: parseInt($scope.selectedSheetIndex),
       rowColumnName: $scope.rowColumnName,
@@ -70,6 +73,28 @@ function wizardCtrl($scope, $timeout, XlsParseService) {
   $scope.closeWizard = function() {
     $scope.$dismiss({reason:'canceled'});
   };
+
+  $scope.toggleAll = function() {
+
+    $scope.headers.forEach(h => { h.selected = $scope.allFields; });
+
+  };
+
+  $scope.checkAll = function(header) {
+
+    if(!header.selected) {
+      $scope.allFields = false;
+      return;
+    }
+
+    if($scope.headers.every(h => h.selected)) {
+      $scope.allFields = true;
+      return;
+    }
+
+    $scope.allFields = false;
+
+  }
 
 }
 
