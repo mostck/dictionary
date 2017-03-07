@@ -4,7 +4,15 @@
             <option ng-repeat="dic in dictionariesList" value="{{dic.id}}">{{dic.title}}</option>
         </select>
         <file-input-js-xlsx onread="readXls" onerror="error"></file-input-js-xlsx>
+
+        <div style="float: right">
+            <button type="button" class="btn btn-success" ng-click="$ctrl.addRow()">Add Row</button>
+            <button type="button" class="btn btn-success" ng-click="$ctrl.removeLastRow()">Remove Last Row</button>
+            <button type="button" class="btn btn-success" ng-click="$ctrl.addColumn()">Add Column</button>
+            <button type="button" class="btn btn-success" ng-click="$ctrl.removeLastColumn()">Remove Last Column</button>
+        </div>
     </form>
+
     <ul class="sheet-tabs">
         <li class="sheet-tab-item" ng-class="{'active': sheet.name === activeSheet.name }" ng-repeat="sheet in sheets" ng-click="$ctrl.changeTab(sheet)">{{sheet.name}}</li>
     </ul>

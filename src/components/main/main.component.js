@@ -18,7 +18,7 @@ class MainCtrl {
     $scope.sheets = [];
     $scope.activeSheet = {
       name: null,
-      data: null,
+      // data: null,
       header: null,
       onRegisterApi: gridApi => {
         // console.log('onRegisterApi', gridApi);
@@ -29,8 +29,43 @@ class MainCtrl {
           width: 30,
           cellTemplate: cellTemplate
         });
-      }
+      },
+      columnDefs: [
+        {
+          field: "firstName"
+        },
+        {
+          field: "lastName"
+        },
+        {
+          field: "company"
+        },
+        {
+          field: "employed"
+        },
+      ],
+      data: [
+        {
+          "firstName": "Cox",
+          "lastName": "Carney",
+          "company": "Enormo",
+          "employed": true
+        },
+        {
+          "firstName": "Lorraine",
+          "lastName": "Wise",
+          "company": "Comveyer",
+          "employed": false
+        },
+        {
+          "firstName": "Nancy",
+          "lastName": "Waters",
+          "company": "Fuelton",
+          "employed": false
+        }
+      ]
     };
+
 
     DictionaryService.getDictionariesList()
       .then(res => {
@@ -72,9 +107,11 @@ class MainCtrl {
       let headers = [];
       let columnDefs = [];
 
+      let types = this.XlsParseService.typesMap;
+
       res.headers.forEach(function (el) {
         headers.push(el.name);
-        columnDefs.push({ field: el.name, name: el.name });
+        columnDefs.push({ field: el.name, name: el.name, type: types[el.type] });
       });
 
       let selectedSheet = tempSheets[res.selectedSheetIndex];
@@ -133,6 +170,23 @@ class MainCtrl {
   dictionaryChanged() {
     console.log('selectedDictionaryId', this.$scope.selectedDictionaryId);
   }
+
+  addRow() {
+    this.$scope.activeSheet.data.push({});
+  };
+
+  removeLastRow() {
+    this.$scope.activeSheet.data.splice(-1,1);
+  };
+
+  addColumn() {
+    this.$scope.activeSheet.columnDefs.push({ field: String.fromCharCode('A'.charCodeAt() + this.$scope.activeSheet.columnDefs.length) });
+  }
+
+  removeLastColumn() {
+    this.$scope.activeSheet.columnDefs.splice(-1, 1);
+  }
+
 }
 
 export const Main = {

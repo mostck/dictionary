@@ -22,6 +22,7 @@ angular.module('dictionary', [
   'directives',
   'filters',
   'services'])
-.config(/*@ngInject*/ ($locationProvider) => {
+.config(/*@ngInject*/ ($locationProvider, $qProvider) => {
+  $qProvider.errorOnUnhandledRejections(false);
   $locationProvider.html5Mode(true);
 });
