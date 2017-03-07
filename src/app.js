@@ -17,6 +17,7 @@ angular.module('dictionary', [
   'ui.grid.edit',
   'ui.grid.resizeColumns',
   'ui.grid.moveColumns',
+  'ui.grid.selection',
   'ui.bootstrap',
   'components',
   'directives',

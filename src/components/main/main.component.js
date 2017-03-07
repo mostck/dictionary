@@ -20,6 +20,7 @@ class MainCtrl {
       name: null,
       // data: null,
       header: null,
+      enableRowSelection: true,
       onRegisterApi: gridApi => {
         // console.log('onRegisterApi', gridApi);
         let cellTemplate =  "<div class=\"ui-grid-row-header-cell ui-grid-disable-selection\"><div class=\"ui-grid-cell-contents\">{{row.entity['rowHeader']}}</div></div>";
