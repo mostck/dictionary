@@ -12,31 +12,35 @@ export default ngInstance => {
       replace: true,
       link: function (scope, element, attrs) {
 
+        scope.fileEl = angular.element(element[0].querySelector('#file-selector'));
+        scope.fileEl.on('change', handleSelect);
+
         function handleSelect() {
-          var files = this.files;
-          for (var i = 0, f = files[i]; i != files.length; ++i) {
-            var reader = new FileReader();
-            var name = f.name;
+          let files = this.files;
+          for (let i = 0, f = files[i]; i != files.length; ++i) {
+            let reader = new FileReader();
+            let name = f.name;
             reader.onload = function (e) {
+              let data;
               if (!e) {
-                var data = reader.content;
+                data = reader.content;
               } else {
-                var data = e.target.result;
+                data = e.target.result;
               }
 
               /* if binary string, read with type 'binary' */
               try {
-                var workbook = XLSX.read(data, { type: 'binary' });
+                let workbook = XLSX.read(data, { type: 'binary' });
 
                 if (attrs.onread) {
-                  var handleRead = scope[attrs.onread];
+                  let handleRead = scope[attrs.onread];
                   if (typeof handleRead === "function") {
                     handleRead(workbook);
                   }
                 }
               } catch (e) {
                 if (attrs.onerror) {
-                  var handleError = scope[attrs.onerror];
+                  let handleError = scope[attrs.onerror];
                   if (typeof handleError === "function") {
                     handleError(e);
                   }
@@ -44,25 +48,26 @@ export default ngInstance => {
               }
 
               // Clear input file
-              element.val('');
+              scope.fileEl.val('');
             };
 
             //extend FileReader
             if (!FileReader.prototype.readAsBinaryString) {
               FileReader.prototype.readAsBinaryString = function (fileData) {
-                var binary = "";
-                var pt = this;
-                var reader = new FileReader();
+                let binary = "";
+                let pt = this;
+                let reader = new FileReader();
                 reader.onload = function (e) {
-                  var bytes = new Uint8Array(reader.result);
-                  var length = bytes.byteLength;
-                  for (var i = 0; i < length; i++) {
+                  let bytes = new Uint8Array(reader.result);
+                  let length = bytes.byteLength;
+                  for (let i = 0; i < length; i++) {
                     binary += String.fromCharCode(bytes[i]);
                   }
                   //pt.result  - readonly so assign binary
                   pt.content = binary;
-                  $(pt).trigger('onload');
-                }
+                  $(pt).trigger('onload'); // TODO: get rid of these jquery use
+
+                };
                 reader.readAsArrayBuffer(fileData);
               }
             }
@@ -72,9 +77,6 @@ export default ngInstance => {
           }
         }
 
-        let fileEl = angular.element(element[0].querySelector('#file-selector'));
-
-        fileEl.on('change', handleSelect);
       }
     };
   });
